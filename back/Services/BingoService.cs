@@ -196,6 +196,11 @@ namespace QuickBingo.Services
             return _players.Select(p => p.Name).ToList();
         }
 
+        public List<int> GetSortedNumbers()
+        {
+            return _sortedNumbers.ToList();
+        }
+
         public void RemovePlayerByConnectionId(string connectionId)
         {
             var player = _players.FirstOrDefault(p => p.ConnectionId == connectionId);

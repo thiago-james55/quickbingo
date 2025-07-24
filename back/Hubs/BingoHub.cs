@@ -81,6 +81,11 @@ namespace QuickBingo.Hubs
             }
         }
 
+        public Task<List<int>> GetSortedNumbers()
+        {
+            return Task.FromResult(_bingoService.GetSortedNumbers());
+        }
+
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var player = _bingoService.GetPlayerByConnectionId(Context.ConnectionId);
