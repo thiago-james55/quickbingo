@@ -15,29 +15,20 @@ namespace QuickBingo.Hubs
 
         public async Task<List<int>> RegisterPlayer(string playerName)
         {
-            if (!string.IsNullOrWhiteSpace(playerName))
-            {
-                string connectionId = Context.ConnectionId;
+            if (string.IsNullOrWhiteSpace(playerName))
+                return null;
 
-                List<int> bingoCard = _bingoService.RegisterPlayer(playerName, connectionId);
-                if (bingoCard == null) return null;
-                await Clients.All.SendAsync("PlayerRegistered", playerName);
-                await Clients.All.SendAsync("PlayerListUpdated", _bingoService.GetAllPlayerNames());
+            string connectionId = Context.ConnectionId;
 
-                return bingoCard;
-            }
-            return null;
+            List<int> bingoCard = _bingoService.RegisterPlayer(playerName, connectionId);
+
+            await Clients.All.SendAsync("PlayerRegistered", playerName);
+            await Clients.All.SendAsync("PlayerListUpdated", _bingoService.GetAllPlayerNames());
+
+            return bingoCard;
         }
 
-        public async Task<List<int>> GetBingoCard()
-        {
-            BingoService.Player player = _bingoService.GetPlayerByConnectionId(Context.ConnectionId);
-            if (player != null && !_bingoService._isGameActive)
-            {
-                return player.BingoCard;
-            }
-            return null;
-        }
+
 
         public async Task Reset()
         {
@@ -57,6 +48,11 @@ namespace QuickBingo.Hubs
             }
         }
 
+        public async Task StartGame()
+        {
+                _bingoService.StartGame();
+        }
+
         public async Task ResumeGame()
         {
             if (!_bingoService._isGameActive)
@@ -69,7 +65,7 @@ namespace QuickBingo.Hubs
         public async Task WinGame(List<int> bingoCard)
         {
             var connectionId = Context.ConnectionId;
-            BingoService.Player player = _bingoService.GetPlayerByConnectionId(connectionId);
+            Player player = _bingoService.GetPlayerByConnectionId(connectionId);
 
             if (player != null && player.BingoCard.SequenceEqual(bingoCard))
             {

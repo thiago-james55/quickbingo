@@ -3,6 +3,7 @@ using QuickBingo.Hubs;
 
 namespace QuickBingo.Services
 {
+
     public class BingoService
     {
         private readonly IHubContext<BingoHub> _hubContext;
@@ -12,7 +13,6 @@ namespace QuickBingo.Services
 
         public bool _isGameActive { get; private set; } = false;
         private bool _isDrawing = false;
-        public record Player(string Name, string ConnectionId, List<int> BingoCard);
         private readonly List<Player> _players = new List<Player>();
 
         private CancellationTokenSource? _cts;
@@ -36,8 +36,10 @@ namespace QuickBingo.Services
         {
             List<int> cardNumbers = Enumerable.Range(1, 75)
                 .OrderBy(x => _random.Next())
-                .Take(24) // 24 numbers for a Bingo card
+                .Take(24) //
                 .ToList();
+
+            cardNumbers.Sort();
 
             return cardNumbers;
         }
@@ -88,26 +90,33 @@ namespace QuickBingo.Services
 
         public List<int> RegisterPlayer(string playerName, string connectionId)
         {
-            if (!string.IsNullOrWhiteSpace(playerName))
-            {
-                var bingoCard = GenerateBingoCard();
-                var player = new Player(playerName, connectionId, bingoCard);
-                _players.Add(player);
+            if (string.IsNullOrWhiteSpace(playerName))
+                return null;
 
-                return bingoCard;
+            var existingPlayer = GetPlayerByConnectionId(connectionId);
+
+            if (existingPlayer != null)
+            {
+                existingPlayer.Name = playerName; // Atualiza o nome do jogador
+                return existingPlayer.BingoCard;
             }
-            return null;
+
+            var bingoCard = GenerateBingoCard();
+            var newPlayer = new Player(playerName, connectionId, bingoCard);
+            _players.Add(newPlayer);
+            return bingoCard;
         }
 
-
-        public List<int> GetBingoCard(string playerName)
+        public void StartGame()
         {
-            var player = _players.FirstOrDefault(p => p.Name == playerName);
-            if (player != null && !_isGameActive)
-            {
-                return player.BingoCard;
-            }
-            return null;
+            if (_isGameActive)
+                return;
+
+            InitializeBingoNumbers();
+            _sortedNumbers.Clear();     
+            _isGameActive = true;
+            StartAutoDraw();
+            _hubContext.Clients.All.SendAsync("GameStarted");
         }
 
         public void PauseGame()
@@ -209,4 +218,19 @@ namespace QuickBingo.Services
         }
 
     }
+
+    public class Player
+    {
+        public string Name { get; set; }
+        public string ConnectionId { get; set; }
+        public List<int> BingoCard { get; set; }
+
+        public Player(string name, string connectionId, List<int> bingoCard)
+        {
+            Name = name;
+            ConnectionId = connectionId;
+            BingoCard = bingoCard;
+        }
+    }
+
 }
