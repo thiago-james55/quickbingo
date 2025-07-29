@@ -1,0 +1,174 @@
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+}
+
+
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  font-size: clamp(1rem, 5vw, 2rem);
+
+}
+
+.modal {
+  background: rgba(128, 0, 128, 0.5);
+  padding: 2rem;
+  border-radius: 8px;
+  width: 80vw;
+  box-shadow: 0 0 10px black;
+  text-align: center;
+}
+
+.modal input {
+  width: 100%;
+  padding: 1rem;
+  margin: 1rem 0;
+  font-size: clamp(1rem, 5vw, 2rem);
+
+}
+
+.modal .buttons {
+  display: flex;
+  justify-content: space-between;
+  font-size: clamp(1rem, 5vw, 2rem);
+}
+
+.modal button {
+  padding: 1rem 2rem;
+  cursor: pointer;
+  width: 45%;
+  font-size: clamp(1rem, 5vw, 2rem);
+
+}
+
+
+#welcome-player {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: purple;
+  font-size: clamp(1rem, 5vw, 2rem);
+}
+
+.bingo-card {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  width: 90%;
+  height: 50%;
+  margin: 1rem auto;
+  border: 4px solid gold;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #3b0a64;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.cell {
+  display: flex;                  /* adiciona Flexbox */
+  align-items: center;           /* centraliza verticalmente */
+  justify-content: center;       /* centraliza horizontalmente */
+  padding: 1rem;
+  border: 1px solid gold;
+  color: gold;
+  font-weight: bold;
+  font-size: 2rem;
+  background-color: #3b0a64;
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none; 
+}
+
+.cell:nth-child(5n) {
+  border-right: none;
+}
+
+.row:last-child .cell {
+  border-bottom: none;
+}
+
+.cell.marked {
+  background-color: green;
+  color: white;
+  animation: pulse 1s infinite;
+  box-shadow: 0 0 10px #00ff00;
+}
+
+/* Animação de pulsar (pulse) */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 5px #00ff00;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px #00ff00;
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 5px #00ff00;
+    transform: scale(1);
+  }
+}
+
+.bingo-info-container {
+  display: flex;
+  width: 90%;
+  height: 40%;
+  justify-content: space-between;
+  padding: 1rem;
+  margin: 1rem auto;
+  background-color: #3b0a64;
+  border: 4px solid gold;
+  border-radius: 12px;
+  color: gold;
+  gap: 1rem;
+}
+
+.player-list, .draw-info {
+  width: 50%;
+}
+
+.player-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.player-list li {
+  padding: 0.25rem 0;
+}
+
+.number-drawn {
+  font-size: 3rem;
+  font-weight: bold;
+  color: gold;
+  margin: 1rem 0;
+}
+
+.drawn-numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.drawn-numbers span {
+  background-color: #5e1d92;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+}

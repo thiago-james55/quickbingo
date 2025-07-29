@@ -1,0 +1,47 @@
+<div class="main-container">
+
+  <div class="modal-backdrop" *ngIf="showModal">
+    <div class="modal">
+      <h2 style="color: gold;">Digite seu nome</h2>
+      <input type="text" [(ngModel)]="playerName" placeholder="Seu nome" />
+      <div class="buttons">
+        <button (click)="confirmName()" [disabled]="!playerName">Entrar</button>
+        <button (click)="cancelName()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <p id="welcome-player" *ngIf="playerName" (click)="openModal()">Bem vindo {{playerName}}!</p>
+
+  <div *ngIf="bingoCard" class="bingo-card">
+    <div class="row" *ngFor="let row of getFormattedCard()">
+      <div class="cell" *ngFor="let cell of row" [ngClass]="{'marked': isNumberMarked(cell)}">
+        {{ cell }}
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bingo-info-container">
+    <div class="player-list">
+      <h3>Jogadores</h3>
+      <ul>
+        <li *ngFor="let player of playerList">{{ player }}</li>
+      </ul>
+    </div>
+
+    <div class="draw-info">
+      <h3>Número Sorteado</h3>
+      <div class="number-drawn">{{ numberDrawn ?? '-' }}</div>
+
+      <h4>Números já sorteados</h4>
+      <div class="drawn-numbers">
+        <span *ngFor="let number of drawnNumbers">{{ number }}</span>
+      </div>
+    </div>
+  </div>
+
+  <button *ngIf="showStartButton" (click)="startGame()">START GAME</button>
+
+
+</div>
