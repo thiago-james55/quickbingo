@@ -13,7 +13,7 @@
 app-header {
   flex: 0 0 5%;
   overflow: hidden;
-  background-color: purple;
+  background-color: #3b0a64;
 }
 
 main {
@@ -22,5 +22,5 @@ main {
 
 app-footer {
   flex: 0 0 3%;
-  background-color: purple;
+  overflow: hidden;
 }
